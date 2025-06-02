@@ -2,9 +2,6 @@ import Contacto from "./classContacto.js";
 
 // funciones
 const abrirModal = () => {
-  const modalContacto = new bootstrap.Modal(
-    document.getElementById("modalContacto")
-  );
   //aqui abro la ventana modal
   modalContacto.show();
   //cambie la variabl para que cree contactos
@@ -73,27 +70,38 @@ const dibujarFila = (contacto, indice) => {
 };
 
 window.eliminarContacto = (id) => {
-  console.log("aqui deberia borrar un contacto");
-  console.log(id);
-  //buscar y borrar el contacto del array agenda
-  const posicionContactoBuscado = agenda.findIndex(
-    (contacto) => contacto.id === id
-  );
-  agenda.splice(posicionContactoBuscado, 1);
-  //actualizar el localstorage
-  guardarLocalStorage();
-  //actualizar la tabla de contactos
-  console.log(posicionContactoBuscado);
-  tablaContactos.children[posicionContactoBuscado].remove();
-  //todo: corregir las celdas de la tabla cuando borramos un contacto
-  //Recorrer las filas restantes y actualizar sus índices
-  const filasRestantes = tablaContactos.children;
-  for (let i = 0; i < filasRestantes.length; i++) {
-    const celdaIndice = filasRestantes[i].querySelector("th");
-    if (celdaIndice) {
-      celdaIndice.textContent = i + 1; // Actualiza el texto con el nuevo índice
+  Swal.fire({
+    title: "Estas por eliminar un contacto",
+    text: "si decides eliminar, no puedes revertir este paso",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#78c2ad",
+    cancelButtonColor: "#ff7851",
+    confirmButtonText: "Borrar",
+    cancelButtonText: "Salir",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      //buscar y borrar el contacto del array agenda
+      const posicionContactoBuscado = agenda.findIndex(
+        (contacto) => contacto.id === id
+      );
+      agenda.splice(posicionContactoBuscado, 1);
+      //actualizar el localstorage
+      guardarLocalStorage();
+      //actualizar la tabla de contactos
+      console.log(posicionContactoBuscado);
+      tablaContactos.children[posicionContactoBuscado].remove();
+      //todo: corregir las celdas de la tabla cuando borramos un contacto
+      //Recorrer las filas restantes y actualizar sus índices
+      const filasRestantes = tablaContactos.children;
+      for (let i = 0; i < filasRestantes.length; i++) {
+        const celdaIndice = filasRestantes[i].querySelector("th");
+        if (celdaIndice) {
+          celdaIndice.textContent = i + 1; // Actualiza el texto con el nuevo índice
+        }
+      }
     }
-  }
+  });
 };
 
 window.prepararContacto = (id) => {
@@ -130,12 +138,31 @@ const editarContacto = () => {
   //actualizar el localstorage
   guardarLocalStorage();
   //limpiar el formulario
+  limpiarFormulario();
   //cerrar el modal
+  modalContacto.hide();
   //actualizar la tabla de contacto
+  // Actualizar SOLO la fila de la tabla correspondiente al contacto editado
+  const filaEditada = tablaContactos.children[posicionContacto];
+  if (filaEditada) {
+    filaEditada.children[1].textContent = agenda[posicionContacto].nombre;
+    filaEditada.children[2].textContent = agenda[posicionContacto].apellido;
+    filaEditada.children[3].textContent = agenda[posicionContacto].telefono;
+    filaEditada.children[4].textContent = agenda[posicionContacto].email;
+  }
+
   //agregar un mensaje al usuario
+  Swal.fire({
+    title: "Contacto modificado",
+    text: `El contacto ${agenda[posicionContacto].nombre} fue modificado correctamente`,
+    icon: "success",
+  });
 };
 
 //declarar variables
+const modalContacto = new bootstrap.Modal(
+  document.getElementById("modalContacto")
+);
 const btnAgregar = document.getElementById("btnAgregar");
 const formularioContacto = document.querySelector("form");
 const inputNombre = document.querySelector("#nombre");
