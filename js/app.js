@@ -64,7 +64,7 @@ const dibujarFila = (contacto, indice) => {
               <td>
                 <button class="btn btn-warning" onclick="prepararContacto('${contacto.id}')">Editar</button>
                 <button class="btn btn-danger" onclick="eliminarContacto('${contacto.id}')">Borrar</button>
-                <button class="btn btn-info">Ver</button>
+                <button class="btn btn-info" onclick="verContacto('${contacto.id}')">Ver</button>
               </td>
             </tr>`;
 };
@@ -120,6 +120,11 @@ window.prepararContacto = (id) => {
   idContactoEditar = id;
   creandoContacto = false;
 };
+
+window.verContacto = (id)=>{
+console.log(window.location)
+  window.location.href= './pages/detalleContacto.html?cod='+id;
+}
 
 const editarContacto = () => {
   console.log("aqui debo agregar la logica que edite al contacto en el array");
