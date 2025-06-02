@@ -86,6 +86,14 @@ window.eliminarContacto = (id) => {
   console.log(posicionContactoBuscado);
   tablaContactos.children[posicionContactoBuscado].remove();
   //todo: corregir las celdas de la tabla cuando borramos un contacto
+  //Recorrer las filas restantes y actualizar sus índices
+  const filasRestantes = tablaContactos.children;
+  for (let i = 0; i < filasRestantes.length; i++) {
+    const celdaIndice = filasRestantes[i].querySelector("th");
+    if (celdaIndice) {
+      celdaIndice.textContent = i + 1; // Actualiza el texto con el nuevo índice
+    }
+  }
 };
 
 window.prepararContacto = (id) => {
