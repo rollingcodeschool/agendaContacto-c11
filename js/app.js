@@ -37,6 +37,11 @@ const crearContacto = () => {
 
 const limpiarFormulario = () => {
   formularioContacto.reset();
+  //limpiar los estilos del formulario
+  const inputs = formularioContacto.querySelectorAll('.form-control');
+  inputs.forEach(input => {
+    input.classList.remove('is-valid', 'is-invalid');
+  });
 };
 
 const guardarLocalStorage = () => {
@@ -163,6 +168,44 @@ const editarContacto = () => {
     icon: "success",
   });
 };
+
+// funciones de validacion
+function validarCantidadCaracteres(input, min, max) {
+  if (input.value.trim().length >= min && input.value.trim().length <= max) {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+    return true;
+  } else {
+    input.classList.add("is-invalid");
+     input.classList.remove("is-valid");
+    return false;
+  }
+}
+function validarEmail() {
+  const regExp = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+  if (regExp.test(inputEmail.value)) {
+    inputEmail.classList.add("is-valid");
+    inputEmail.classList.remove("is-invalid");
+    return true;
+  } else {
+    inputEmail.classList.add("is-invalid");
+     inputEmail.classList.remove("is-valid");
+    return false;
+  }
+}
+
+function validaciones(){
+  let datosValidos =true;
+  if(!validarCantidadCaracteres(inputNombre, 2, 50)){
+    datosValidos= false
+  }
+  
+  if(!validarCantidadCaracteres(inputApellido,2,50)){
+    datosValidos= false
+  }
+
+  return datosValidos;
+}
 
 //declarar variables
 const modalContacto = new bootstrap.Modal(
